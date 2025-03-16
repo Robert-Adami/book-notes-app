@@ -1,0 +1,101 @@
+<%- include('partials/header.ejs'); %>
+<div class="container my-4">
+  <div class="text-center">
+    <!--Nadpis a popis-->
+    <h1 class="fw-bold">Prečítané Knihy</h1>
+    <p class="text-muted">
+      Toto je zoznam kníh, ktoré som prečítala a chcela by som ich zdieľať s ostatnými čitateľmi.
+    </p>
+  </div>
+
+  <!--Horný panel: vyhľadávanie, triedenie a tlačidlo na pridanie knihy-->
+<div class="container mt-3">
+  <div class="row g-2 align-items-center">
+    <!-- Vyhľadávací panel -->
+    <div class="col-12 col-sm-4">
+      <input type="text" class="form-control" placeholder="🔍 Hľadajte"/>
+    </div>
+
+    <!-- Triediace tlačidlá -->
+    <div class="col-12 col-sm-4 d-flex justify-content-center">
+      <form action="/order" method="GET" class="d-flex flex-wrap gap-2">
+        <button class="btn btn-outline-secondary" name="orderBy" value="rating">🔽 Hodnotenie</button>
+        <button class="btn btn-outline-secondary" name="orderBy" value="readdate">🔽 Najnovšie</button>
+        <button class="btn btn-outline-secondary" name="orderBy" value="title">🔽 Názov</button>
+      </form>
+    </div>
+
+    <!-- Button trigerujúci modal -->
+    <div class="col-12 col-sm-4 d-flex justify-content-center justify-content-sm-end">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+        Pridať novú knihu
+      </button>
+    </div>
+  </div>
+</div>
+
+ 
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Pridať Knihu</h5>
+      </div>
+      <div class="modal-body">
+        <form id="addBookForm">
+          <div class="form-group">
+            <label for="bookTitle">Názov knihy</label>
+            <input type="text" class="form-control" id="bookTitle" required/>
+          </div>
+          <div class="form-group">
+            <label for="bookAuthor">Autor</label>
+            <input type="text" class="form-control" id="bookAuthor" required/>
+          </div>
+          <div class="form-group">
+            <label for="bookReadDate">Dátum prečítania</label>
+            <input type="date" class="form-control" id="bookReadDate" required/>
+          </div>
+          <div class="form-group">
+            <label for="bookRating">Hodnotenie (1-10)</label>
+            <input type="number" class="form-control" id="bookRating" min="1" max="10" required/>
+          </div>
+          <div class="form-group">
+            <label for="bookCoverId">ID Obalu knihy (openLibrary)</label>
+            <input type="number" class="form-control" id="bookCoverId" required/>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavrieť</button>
+        <button type="button" class="btn btn-primary" id="saveBook">Uložiť</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!--Karty kníh-->
+<div class="container">
+  <div class="row">
+    <% data.forEach(book => { %>
+      <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card h-100">
+          <img src="<%= book.coverURL %>" class="card-img-top img-fluid book-cover" alt="<% book.title %>"/>
+          <div class="card-body">
+            <h5 class="card-title"><%= book.title %></h5>
+            <p class="card-text"><strong>Od:</strong> <%= book.author %></p>
+            <p class="card-text"><strong>Čítané:</strong> <%= book.readdate.toLocaleDateString() %></p>
+            <p class="card-text"><strong>Hodnotenie:</strong> <%= book.rating %>/10</p>
+            <form class="deleteBookForm">
+              <button type="button" class="btn btn-danger deleteBook" data-id="<%= book.id %>">Vymazať</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+  </div>
+</div>
+
+<%- include('partials/footer.ejs'); %>
