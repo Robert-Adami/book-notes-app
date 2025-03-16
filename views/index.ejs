@@ -13,7 +13,10 @@
   <div class="row g-2 align-items-center">
     <!-- Vyhľadávací panel -->
     <div class="col-12 col-sm-4">
-      <input type="text" class="form-control" placeholder="🔍 Hľadajte"/>
+      <form action="/search" method="GET" class="d-flex gap-2">
+        <input type="text" id="searchBar" name="query" class="form-control" placeholder="🔍 Hľadajte"/>
+        <button class="btn btn-primary" name="findBook" id="findBook">Vyhľadávať</button>
+      </form>
     </div>
 
     <!-- Triediace tlačidlá -->

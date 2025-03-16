@@ -57,3 +57,19 @@ $(document).ready(function () {
     }
   });
 });
+
+//Dáta z search baru
+$(document).ready(function () {
+  $("#findBook").click(function () {
+    let title = $("#searchBar").val();
+
+
+    if (!title) {
+      alert("Prosím zadaj čo chceš vyhľadať");
+      return;
+    }
+
+    //presmerovanie na /search s query parametrom
+    window.location.href = "/search?query=" + encodeURIComponent(title);
+  });
+});

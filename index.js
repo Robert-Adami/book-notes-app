@@ -14,8 +14,6 @@ const db = new pg.Client({
 });
 db.connect();
 
-// 📚 Dočasné dáta – knihy
-
 // Middleware – základné nastavenia Expressu
 app.use(express.json()); // Parsovanie JSON requestov
 app.use(express.urlencoded({ extended: true })); // Podpora URL formulárových dát
@@ -102,7 +100,24 @@ app.post("/add", async (req, res) => {
     res.status(500).send({ success: false, message: "Chyba servera" });
   }
 });
-//TU SOM SKONČIL
+//Vyhľadávanie kníh so searchbarom
+app.get("/search", async (req, res) => {
+  try {
+    //search query z button pressu používame template literals a percentá %% znamená wildcard
+    let searchQuery = req.query.query;
+    const result = await db.query("SELECT * FROM books WHERE LOWER(title) LIKE LOWER($1)", 
+      [`%${searchQuery}%`]
+    );
+
+    //pridanie obalov
+    const booksWithCovers = await addCoverURLs(result.rows);
+    res.render("index.ejs", { data: booksWithCovers });
+  } catch (error) {
+    console.error("❌ Chyba pri vyhľadávaní:", error);
+    res.status(500).send("Chyba pri vyhľadávaní knihy.");
+  }
+});
+
 app.delete("/delete/:id", async (req, res) => {
   try {
     const bookId = req.params.id;
